@@ -23,6 +23,7 @@ export interface Captcha {
   image: { url: string; width: number; height: number };
   hash: string;
   tags: string[];
+  trust?: string[];
 }
 
 interface CaptchaProps {
@@ -55,7 +56,7 @@ export function Captcha({
     try {
       setLoading(true);
       const res = await axios.post<{ token: string }>('/api/validate', {
-        hash: quiz.hash,
+        trust: quiz.trust,
         selecteds: selectedTags,
       });
       const { token } = res.data;

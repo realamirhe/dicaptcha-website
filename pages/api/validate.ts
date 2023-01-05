@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { redis } from 'src/config/redis';
 import { nanoid } from 'nanoid';
 
 type ResponseData = { token: string } | { message: string };
@@ -14,22 +13,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>,
 ) {
-  const hash: string = req.body.hash;
   const selecteds: string[] = req.body.selecteds;
-  const retrievedCache = (await redis.get(hash)) as RetrievedCache;
-  redis.del(hash);
+  const trust: string[] = req.body.trust;
 
-  if (!retrievedCache) {
-    return res.status(500).json({
-      message: 'Server can not retirve the value from upstash in your region!',
-    });
-  }
-
-  const posSet = new Set(retrievedCache.pos.map(pos => pos[0]));
-  const negSet = new Set(retrievedCache.neg.map(neg => neg[0]));
-
-  const negativeCounts = selecteds.filter(t => negSet.has(t)).length;
-  const positiveCounts = selecteds.filter(t => posSet.has(t)).length;
+  const negativeCounts = selecteds.filter(x => !trust.includes(x)).length;
+  const positiveCounts = selecteds.length - negativeCounts;
   const score = positiveCounts - negativeCounts;
 
   let isHuman = true;

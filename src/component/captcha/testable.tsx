@@ -14,6 +14,7 @@ export function Testable() {
     hash: string;
     tags: string[];
     image: string;
+    trust: string[];
   } | null>(null);
 
   const loadCaptcha = async () => {
@@ -54,12 +55,9 @@ export function Testable() {
         }}
         quiz={{
           hash: captchaData?.hash || '',
-          image: {
-            url: captchaData?.image || '',
-            width: 640,
-            height: 640,
-          },
+          image: { url: captchaData?.image || '', width: 640, height: 640 },
           tags: captchaData?.tags || [],
+          trust: captchaData?.trust,
         }}
       />
     </>

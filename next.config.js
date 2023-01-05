@@ -4,6 +4,7 @@ const nextConfig = {
   swcMinify: true,
   images: {
     remotePatterns: [
+      { protocol: 'https', hostname: 'cdn.midjourney.com' },
       { protocol: 'https', hostname: 'raw.githubusercontent.com' },
     ],
   },
