@@ -15,7 +15,7 @@ import {
 import { Box } from '@mui/system';
 import axios from 'axios';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DiCaptchaLogo } from '../logo/dicaptcha';
 import { Tag } from '../tag/tag';
 
@@ -51,6 +51,14 @@ export function Captcha({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const fallbackSize = isMobile ? BASE_SEZE_XS : BASE_SIZE_MD;
+
+  useEffect(() => {
+    if (!open) {
+      setSelectedTags([]);
+      setLoading(false);
+      setError(null);
+    }
+  }, [open]);
 
   const submit = async () => {
     try {
@@ -88,13 +96,15 @@ export function Captcha({
             overflow: 'hidden',
           }}
         >
-          <Image
-            alt={'cptcha quiz image background'}
-            fill
-            src={quiz.image.url}
-            draggable={false}
-            style={{ objectFit: 'cover' }}
-          />
+          {quiz.image.url && (
+            <Image
+              alt={'cptcha quiz image background'}
+              fill
+              src={quiz.image.url}
+              draggable={false}
+              style={{ objectFit: 'cover' }}
+            />
+          )}
           <Box
             sx={{
               WebkitBackdropFilter: 'blur(20px)',
@@ -103,19 +113,21 @@ export function Captcha({
               inset: 0,
             }}
           />
-          <Image
-            alt={'cptcha quiz image'}
-            width={quiz.image.width || fallbackSize}
-            height={quiz.image.height || fallbackSize}
-            src={quiz.image.url}
-            draggable={false}
-            style={{
-              objectFit: 'contain',
-              maxWidth: '100%',
-              maxHeight: fallbackSize,
-              position: 'relative',
-            }}
-          />
+          {quiz.image.url && (
+            <Image
+              alt={'cptcha quiz image'}
+              width={quiz.image.width || fallbackSize}
+              height={quiz.image.height || fallbackSize}
+              src={quiz.image.url}
+              draggable={false}
+              style={{
+                objectFit: 'contain',
+                maxWidth: '100%',
+                maxHeight: fallbackSize,
+                position: 'relative',
+              }}
+            />
+          )}
         </Stack>
 
         <CardContent sx={{ pb: { xs: 0.5, md: 2 } }}>
