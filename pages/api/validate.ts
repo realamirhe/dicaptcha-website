@@ -2,12 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { nanoid } from 'nanoid';
 
 type ResponseData = { token: string } | { message: string };
-type ValidTag = [tag: string, score: number];
-type RetrievedCache = {
-  pos: ValidTag[];
-  neg: ValidTag[];
-  client: string[];
-};
 
 export default async function handler(
   req: NextApiRequest,
@@ -29,9 +23,9 @@ export default async function handler(
   }
 
   // console.log({
-  //   posSet,
-  //   negSet,
+  //   trust,
   //   selecteds,
+  //   isHuman,
   //   score,
   // });
 

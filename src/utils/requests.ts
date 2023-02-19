@@ -5,7 +5,16 @@ import {
   NegativesKeywordsPrompt,
   PositivesKeywordsPrompt,
 } from './types';
-import { normalizeId } from './utils';
+import { normalizeId, pipeIds } from './utils';
+import rawDicaptcha from '../data/dicaptcha.json';
+
+const dicaptcha =
+  pipeIds<
+    Record<
+      string,
+      { image: string; tags: string[]; width: number; height: number }
+    >
+  >(rawDicaptcha);
 
 const instance = axios.create({
   httpsAgent: new https.Agent({
@@ -21,11 +30,8 @@ export const getTokenForPrompt = async (prompt: string) => {
   throw new Error('AWS Server is down');
 };
 
-export const getImages = async (): Promise<ImagePrompt[]> => {
-  const res = await instance.get<ImagePrompt[]>(
-    `${process.env.DATA_CDN_BASE_URL}/midjourney/gitrow/images.csv`,
-  );
-  return res.data.map(normalizeId);
+export const getImages = async (): Promise<typeof dicaptcha> => {
+  return dicaptcha;
 };
 
 export const getPositives = async (

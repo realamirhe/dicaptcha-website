@@ -8,3 +8,8 @@ export const normalizeId = <T extends { id: string }>(item: T) => {
   delete item['﻿id'];
   return item;
 };
+
+export const pipeIds = <T extends Record<string, any>>(obj: T) => {
+  const data = Object.keys(obj).map(id => ({ id, ...obj[id] }));
+  return data as (T[keyof T] & { id: string })[];
+};
