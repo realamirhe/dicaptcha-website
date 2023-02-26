@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getImages } from 'src/utils/requests';
-import { choice } from 'src/utils/utils';
+import { choice, getFinalKeywords } from 'src/utils/utils';
 
 interface ResponseData {}
 
@@ -12,10 +12,8 @@ export default async function handler(
   const { image, tags: positiveTags } = positive;
   const { tags: negativeTags } = negative;
 
-  const keywords = [...positiveTags, ...negativeTags];
-
   res.status(200).json({
-    tags: choice(keywords, 8),
+    tags: getFinalKeywords(positiveTags, negativeTags),
     image,
     trust: positiveTags,
   });

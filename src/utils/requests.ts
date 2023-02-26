@@ -5,16 +5,15 @@ import {
   NegativesKeywordsPrompt,
   PositivesKeywordsPrompt,
 } from './types';
-import { normalizeId, pipeIds } from './utils';
+import { choice, normalizeId, pipeIds } from './utils';
 import rawDicaptcha from '../data/dicaptcha.json';
+import rawWords from '../data/words.json';
 
-const dicaptcha =
-  pipeIds<
-    Record<
-      string,
-      { image: string; tags: string[]; width: number; height: number }
-    >
-  >(rawDicaptcha);
+const dicaptcha = pipeIds<
+  Record<string, { image: string; tags: string[]; nsfw_score: number }>
+>(rawDicaptcha).filter(captcha => captcha.tags.length > 1);
+
+const words = rawWords.filter(w => w.length > 5 && w.length < 12);
 
 const instance = axios.create({
   httpsAgent: new https.Agent({
@@ -32,6 +31,10 @@ export const getTokenForPrompt = async (prompt: string) => {
 
 export const getImages = async (): Promise<typeof dicaptcha> => {
   return dicaptcha;
+};
+
+export const getRandomWords = (count: number) => {
+  return choice(words, count);
 };
 
 export const getPositives = async (
