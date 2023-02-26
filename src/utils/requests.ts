@@ -6,7 +6,7 @@ import {
   PositivesKeywordsPrompt,
 } from './types';
 import { choice, normalizeId, pipeIds } from './utils';
-import rawDicaptcha from '../data/dicaptcha.json';
+import rawDicaptcha from '../data/dicaptcha.v1.json';
 import rawWords from '../data/words.json';
 
 const dicaptcha = pipeIds<

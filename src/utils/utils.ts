@@ -18,7 +18,7 @@ export const pipeIds = <T extends Record<string, any>>(obj: T) => {
 
 export const MAX_TAGS_COUNT = 7;
 export const getFinalKeywords = (posTags: string[], negTags: string[]) => {
-  const posSize = posTags.length;
+  const posSize = Math.min(posTags.length, MAX_TAGS_COUNT - 2);
   let noiseCount: number = 1;
   if (posSize < 2) noiseCount = 3;
   else if (posSize < 4) noiseCount = 1;
@@ -27,7 +27,15 @@ export const getFinalKeywords = (posTags: string[], negTags: string[]) => {
 
   const noiseTags = getRandomWords(noiseCount);
   const falsyTags = [...new Set([...negTags, ...noiseTags])];
-  return [
-    ...new Set([...posTags, ...choice(falsyTags, MAX_TAGS_COUNT - posSize)]),
-  ];
+  const negativeSelection = MAX_TAGS_COUNT - posSize;
+
+  return choice(
+    [
+      ...new Set([
+        ...choice(posTags, MAX_TAGS_COUNT - 2),
+        ...choice(falsyTags, Math.max(negativeSelection, 1)),
+      ]),
+    ],
+    MAX_TAGS_COUNT,
+  );
 };

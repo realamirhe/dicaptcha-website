@@ -3,5 +3,5 @@ node_modules/
 .env
 .vercel
 
-dicaptcha.json
+dicaptcha.v1.json
 words.json
